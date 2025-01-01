@@ -1,0 +1,15 @@
+WITH cte as (
+SELECT employee_id, salary,
+CASE 
+WHEN salary > 2*avg_salary THEN 'Overpaid'
+WHEN salary < 0.5*avg_salary THEN 'Underpaid'
+END as status
+FROM(
+SELECT employee_id, salary, title,
+round(avg(salary) OVER(PARTITION BY title),0) as avg_salary
+FROM employee_pay) as a 
+)
+SELECT employee_id, salary, status
+FROM
+cte 
+WHERE status IN ('Overpaid','Underpaid')
