@@ -1,6 +1,6 @@
-SELECT MAX(salary) as second_highest_salary
-FROM(
-SELECT salary
+
+SELECT salary 
 FROM employee
 ORDER by 1 DESC
-OFFSET 1) as a;
+OFFSET 1
+limit 1;
