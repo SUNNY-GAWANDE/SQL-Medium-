@@ -1,1 +1,1 @@
-# SQL-Medium-
+# SQL-Medium
