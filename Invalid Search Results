@@ -1,0 +1,6 @@
+SELECT country,
+sum(num_search) as total_search,
+round(sum(num_search*invalid_result_pct)/sum(num_search),2) as total_invalid_result
+FROM search_category 
+WHERE invalid_result_pct IS NOT NULL
+GROUP BY 1
