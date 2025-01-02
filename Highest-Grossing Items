@@ -1,0 +1,14 @@
+with cte1 as(
+SELECT category,
+product, 
+sum(spend) as ttl_spend
+FROM product_spend
+WHERE EXTRACT( YEAR FROM transaction_date) = 2022
+GROUP BY 1,2),
+cte2 as(
+SELECT *,
+rank() OVER(PARTITION by category ORDER by ttl_spend DESC) rnk
+from cte1)
+SELECT category,product, ttl_spend
+from cte2 
+where rnk<3
