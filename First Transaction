@@ -1,0 +1,9 @@
+WITH cte as(
+SELECT user_id,
+spend, transaction_date,
+rank() OVER(PARTITION by user_id ORDER BY transaction_date asc) as rnk
+FROM
+user_transactions)
+SELECT count(DISTINCT(user_id)) as users
+FROM cte
+WHERE spend >= 50 and rnk =1;
