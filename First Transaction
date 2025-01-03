@@ -1,5 +1,5 @@
 WITH cte as(
-SELECT user_id, 
+SELECT user_id,  
 spend, transaction_date,
 rank() OVER(PARTITION by user_id ORDER BY transaction_date asc) as rnk
 FROM
