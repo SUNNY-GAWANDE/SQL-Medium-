@@ -1,0 +1,19 @@
+with cte1 as(
+SELECT * FROM activities 
+inner JOIN 
+age_breakdown 
+USING(user_id)
+where activity_type <> 'chat'),
+cte2 as(
+SELECT user_id, age_bucket,
+(CASE WHEN activity_type = 'open' THEN time_spent else 0 END) as  open_spent_time,
+(CASE WHEN activity_type = 'send' THEN time_spent else 0 END) as  send_time_spent
+FROM cte1),
+cte3 as(
+SELECT age_bucket,
+sum(open_spent_time) as open_time,sum(send_time_spent) as send_time
+from cte2
+GROUP by 1)
+SELECT age_bucket, round(send_time*100/(send_time + open_time),2) as send_perc,
+round(open_time *100/(send_time + open_time),2) as open_perc
+FROM cte3;
