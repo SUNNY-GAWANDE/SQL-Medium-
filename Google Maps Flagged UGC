@@ -1,0 +1,17 @@
+WITH cte as(
+SELECT place_category	, count(content_tag) as tags_count
+FROM
+place_info
+left JOIN
+maps_ugc_review
+USING(place_id)
+WHERE content_tag = 'Off-topic'
+GROUP BY 1
+order by 2 DESC),
+cte2 as (
+SELECT place_category, 
+rank() OVER(order by tags_count DESC)
+FROM cte)
+SELECT place_category
+from cte2
+where rank = 1
