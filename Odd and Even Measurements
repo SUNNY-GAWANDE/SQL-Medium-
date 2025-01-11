@@ -1,0 +1,10 @@
+with cte as(
+SELECT *, 
+row_number() OVER(PARTITION BY date(measurement_time) ORDER BY measurement_time) as rnk
+FROM measurements)
+select date(measurement_time) as measurement_day,
+sum(CASE WHEN (rnk % 2 != 0) THEN measurement_value end) odd_number,
+sum(CASE WHEN (rnk % 2 = 0) THEN measurement_value end) even_number
+from cte
+group by 1
+ORDER by 1;
