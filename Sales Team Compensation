@@ -1,0 +1,20 @@
+with cte1 as(
+SELECT sum(deal_size) as deal_size ,employee_id 
+FROM deals
+GROUP by 2),
+cte2 as(
+SELECT *
+FROM employee_contract
+INNER JOIN 
+cte1
+using(employee_id)),
+cte3 as(
+SELECT *,
+CASE WHEN deal_size > quota THEN base+(quota*commission)+(commission*(deal_size-quota)*accelerator) 
+ELSE base+(commission*deal_size)
+end as total_compensation
+FROM cte2
+)
+SELECT employee_id, 	total_compensation
+from cte3
+order by 2 DESC,1 ASC;
