@@ -1,0 +1,6 @@
+SELECT count(DISTINCT(user_id)) as repeat_purchasers
+FROM(
+SELECT user_id, product_id, purchase_date, 
+rank() OVER(PARTITION BY product_id ORDER BY purchase_date) as rnk
+FROM purchases) as rnk_tbl 
+WHERE rnk > 2;
