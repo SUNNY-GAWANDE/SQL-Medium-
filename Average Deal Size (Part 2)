@@ -1,0 +1,15 @@
+WITH segment as(
+SELECT *,
+CASE WHEN employee_count < 100 THEN 'SMB'
+     WHEN employee_count >= 100 AND employee_count < 1000 THEN 'Mid-Market'
+     ELSE 'Enterprise'
+     END AS markets
+FROM contracts
+INNER JOIN
+customers
+USING(customer_id))
+SELECT 
+round(sum(CASE WHEN markets = 'SMB' THEN num_seats*yearly_seat_cost END) /count(DISTINCT(CASE WHEN markets = 'SMB' THEN customer_id END)),0) AS smb_avg_revenue,
+round(sum(CASE WHEN markets = 'Mid-Market' THEN num_seats*yearly_seat_cost END) /count(DISTINCT(CASE WHEN markets = 'Mid-Market' THEN customer_id END)),0) AS mid_avg_revenue,
+round(sum(CASE WHEN markets = 'Enterprise' THEN num_seats*yearly_seat_cost END) /count(DISTINCT(CASE WHEN markets = 'Enterprise' THEN customer_id END)),0) AS enterprise_avg_revenue
+FROM segment;
